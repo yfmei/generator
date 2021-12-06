@@ -225,6 +225,9 @@ public abstract class AbstractTemplateEngine {
             ConfigBuilder config = this.getConfigBuilder();
             List<TableInfo> tableInfoList = config.getTableInfoList();
             tableInfoList.forEach(tableInfo -> {
+                // 去掉表前缀的表名
+                String moduleName = tableInfo.getEntityName().toLowerCase();
+                config.refreshConfig(moduleName);
                 Map<String, Object> objectMap = this.getObjectMap(config, tableInfo);
                 Optional.ofNullable(config.getInjectionConfig()).ifPresent(t -> {
                     t.beforeOutputFile(tableInfo, objectMap);

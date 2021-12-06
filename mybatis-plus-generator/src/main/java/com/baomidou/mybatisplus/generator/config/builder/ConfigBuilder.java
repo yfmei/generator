@@ -24,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static com.baomidou.mybatisplus.generator.config.ConstVal.STAR;
+
 /**
  * 配置汇总 传递给文件生成工具
  *
@@ -76,6 +78,11 @@ public class ConfigBuilder {
      * 数据库配置信息
      */
     private final DataSourceConfig dataSourceConfig;
+
+    /**
+     * module 设为 * 生成数据库所有表
+     */
+    private boolean multiModule = false;
 
     /**
      * 在构造器中处理配置
@@ -147,6 +154,32 @@ public class ConfigBuilder {
     @NotNull
     public Map<OutputFile, String> getPathInfo() {
         return pathInfo;
+    }
+
+    /**
+     * 根据模块的包信息更新路径
+     * @param moduleName 去掉前缀的表名小写
+     */
+    public void refreshConfig(String moduleName) {
+        // *表示生成所有表的代码 - 动态修改 module
+        multiModule = STAR.equals(this.getPackageConfig().getModuleName());
+        if (this.isMultiModule()) {
+            // 刷新包信息
+            this.getPackageConfig().refreshPackageInfo(moduleName);
+            // 根据模块包信息刷新路径
+            this.refreshPathInfo();
+        }
+    }
+    /**
+     * 根据模块的包信息更新路径
+     */
+    public void refreshPathInfo() {
+        PathInfoHandler pathInfoHandler = new PathInfoHandler(this.globalConfig, this.templateConfig, this.packageConfig);
+        this.pathInfo.putAll(pathInfoHandler.getPathInfo());
+    }
+
+    public boolean isMultiModule() {
+        return multiModule;
     }
 
     @NotNull

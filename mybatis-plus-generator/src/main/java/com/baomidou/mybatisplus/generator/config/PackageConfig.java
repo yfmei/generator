@@ -123,15 +123,7 @@ public class PackageConfig {
     @NotNull
     public Map<String, String> getPackageInfo() {
         if (packageInfo.isEmpty()) {
-            packageInfo.put(ConstVal.MODULE_NAME, this.getModuleName());
-            packageInfo.put(ConstVal.ENTITY, this.joinPackage(this.getEntity()));
-            packageInfo.put(ConstVal.MAPPER, this.joinPackage(this.getMapper()));
-            packageInfo.put(ConstVal.XML, this.joinPackage(this.getXml()));
-            packageInfo.put(ConstVal.SERVICE, this.joinPackage(this.getService()));
-            packageInfo.put(ConstVal.SERVICE_IMPL, this.joinPackage(this.getServiceImpl()));
-            packageInfo.put(ConstVal.CONTROLLER, this.joinPackage(this.getController()));
-            packageInfo.put(ConstVal.OTHER, this.joinPackage(this.getOther()));
-            packageInfo.put(ConstVal.PARENT, this.getParent());
+            refreshPackageInfo(getModuleName());
         }
         return Collections.unmodifiableMap(this.packageInfo);
     }
@@ -149,6 +141,31 @@ public class PackageConfig {
 
     public String getModuleName() {
         return moduleName;
+    }
+
+    /**
+     * 生成数据库全部表时动态变更模块名, 同时刷新模块的包信息
+     * @param moduleName 数据库表对应的模块名
+     */
+    public void refreshPackageInfo(String moduleName) {
+        this.moduleName = moduleName;
+        // 刷新 packageInfo
+        this.refreshPackageInfo();
+    }
+
+    /**
+     * 刷新模块的包信息
+     */
+    private void refreshPackageInfo() {
+        packageInfo.put(ConstVal.MODULE_NAME, this.getModuleName());
+        packageInfo.put(ConstVal.ENTITY, this.joinPackage(this.getEntity()));
+        packageInfo.put(ConstVal.MAPPER, this.joinPackage(this.getMapper()));
+        packageInfo.put(ConstVal.XML, this.joinPackage(this.getXml()));
+        packageInfo.put(ConstVal.SERVICE, this.joinPackage(this.getService()));
+        packageInfo.put(ConstVal.SERVICE_IMPL, this.joinPackage(this.getServiceImpl()));
+        packageInfo.put(ConstVal.CONTROLLER, this.joinPackage(this.getController()));
+        packageInfo.put(ConstVal.OTHER, this.joinPackage(this.getOther()));
+        packageInfo.put(ConstVal.PARENT, this.getParent());
     }
 
     public String getEntity() {

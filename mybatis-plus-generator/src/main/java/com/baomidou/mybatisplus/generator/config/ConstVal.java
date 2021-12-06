@@ -41,6 +41,7 @@ public interface ConstVal {
     String JAVA_TMPDIR = "java.io.tmpdir";
     String UTF8 = StandardCharsets.UTF_8.name();
     String UNDERLINE = "_";
+    String STAR = StringPool.STAR;
 
     String JAVA_SUFFIX = StringPool.DOT_JAVA;
     String KT_SUFFIX = ".kt";
